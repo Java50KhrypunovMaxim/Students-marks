@@ -1,5 +1,8 @@
 package telran.students.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +34,14 @@ public class StudentsServiceImpl implements StudentsService {
 	}
 
 	@Override
+	@Transactional
 	public Mark addMark(long id, Mark mark) {
-		// TODO Auto-generated method stub
-		return null;
+		StudentDoc studentDoc = studentRepo.findById(id)
+				.orElseThrow(() -> new StudentNotFoundException());
+		studentDoc.getMarks().add(mark);
+		studentRepo.save(studentDoc);
+		log.debug("mark {} has been saved", mark);
+		return mark;
 	}
 
 	@Override
