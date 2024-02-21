@@ -5,6 +5,7 @@ import java.util.List;
 
 import telran.students.dto.Mark;
 import telran.students.dto.Student;
+import telran.students.dto.StudentAvgScore;
 
 public interface StudentsService {
 	Student addStudent(Student student);
@@ -26,6 +27,7 @@ public interface StudentsService {
 	List<Student> getStudentsMarksDate(LocalDate date);
 	/********************************/
 	/**
+	 * 
 	 * @param month
 	 * @param year
 	 * @return students having a mark of a given month and a given year
@@ -53,4 +55,13 @@ public interface StudentsService {
 	 */
 	List<Student> getStudentsFewMarks(int nMarks);
 	/***************************/
+	List<Mark> getStudentMarksSubject(long id, String subject);
+	/*****************/
+	List<StudentAvgScore> getStudentsAvgScoreGreater(int avgThreshold);
+	//methods for HW #72
+	List<Student> getStudentsAllGoodMarksSubject(String subject, int thresholdScore);
+	List<Student> getStudentsMarksAmountBetween(int min, int max);
+	List<Mark> getStudentMarksAtDates(long id, LocalDate from, LocalDate to);
+	List<Long> getBestStudents(int nStudents);
+	List<Long> getWorstStudents(int nStudents);
 }

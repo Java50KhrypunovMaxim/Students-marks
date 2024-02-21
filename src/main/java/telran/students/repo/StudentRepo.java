@@ -16,16 +16,20 @@ StudentDoc findStudentOnlyMarks(long id);
 /********************************/
 IdPhone findByPhone(String phone);
 List<IdPhone> findByPhoneRegex(String regex);
+List<IdPhone> findByMarksDate(LocalDate date);
+List<IdPhone> findByMarksDateBetween(LocalDate firstDate, LocalDate lastDate);
+List<IdPhone> findByMarksSubjectAndMarksScoreGreaterThan(String subject, int markThreshold);
+/*******************/
+@Query("{$and:[{marks:{$elemMatch:{score:{$gt:?0}}}},{marks:{$not:{$elemMatch:{score:{$lte:?0}}}}}]}")
+List<IdPhone> findAllGoodMarks(int markThreshold);
+/**********************************************************/
+@Query("{$expr:{$lt:[{$size:$marks}, ?0]}}")
+List<IdPhone> findFewMarks(int nMarks);
+/*******************/
+@Query("{$and:[{marks:{$elemMatch:{score:{$gt:?0}, subject:?1}}},{marks:{$not:{$elemMatch:{score:{$lte:?0}, subject:?1}}}}]}")
+List<IdPhone> findAllGoodSubjectMarks(int markThreshold, String subject);
+/**********************************************************/
+@Query("{$expr:{$and:[{$gte:[{$size:$marks}, ?0]},{$lte:[{$size:$marks}, ?1]}]}}")
+List<IdPhone> findBetweenMarksAmount(int min, int max);
 
-@Query(value="{$and:[{marks: {$elemMatch:{subject: ?0,score:{$gte:?1}}}},"
-		+ " {marks: {$not:{$elemMatch:{subject: ?0,score:{$lt:?1}}}}}]}")
-List<IdPhone> findByGoodMarksSubject(String subject, int markThreshold);
-
-@Query(value="{marks: {$elemMatch: {date: {$eq: ?0}}}}")
-List<IdPhone> findByLocalDate(LocalDate date);
-
-@Query(value = "{ $expr: { $anyElementTrue: { $map: { input: '$marks', as: 'mark', in: { $and: [ " +
-        "{ $eq: [ { $year: '$$mark.date' }, ?1 ] }, " +
-        "{ $eq: [ { $month: '$$mark.date' }, ?0 ] } ] } } } } }", fields = "{id:1, phone:1}")
-List<IdPhone> findByStudentsMarksMonthYear(int month, int year);
 }
